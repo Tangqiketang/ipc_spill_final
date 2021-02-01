@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: dev
+
+token:
+  expireTime: 1800 #秒
+  resetTime: 600 #秒,还剩多久刷新过期时间
+  secret: 4yhq5AI1NUCHifrtiwvI5OkfFm/fIQ+Th5hv+HyIM58gY6d3pWXoBnYZyxNAp6m60Y8DEsE2gCOGPjHEmY8TyA==
+
+
+qcloud:
+  sms:
+    appid: 123
+    appkey: 123
+    templateid: 123
+    smssign: 123
+
+alicloud:
+  sms:
+    accessKeyId: 123
+    accessSecret: 123
+    signName: 123
+    templateCode: 123
+
+app:
+  location:
+    win: C:/opt/upgrade/app_upload/
+    lin: /opt/upgrade/app_upload/
+

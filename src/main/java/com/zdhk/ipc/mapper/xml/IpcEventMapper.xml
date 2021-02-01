@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdhk.ipc.mapper.IpcEventMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zdhk.ipc.entity.IpcEvent">
+        <id column="id" property="id" />
+        <result column="event_type" property="eventType" />
+        <result column="event_desc" property="eventDesc" />
+        <result column="event_device" property="eventDevice" />
+        <result column="common_video_url" property="commonVideoUrl" />
+        <result column="common_pic_url" property="commonPicUrl" />
+        <result column="detect_video_url" property="detectVideoUrl" />
+        <result column="detect_pic_url" property="detectPicUrl" />
+        <result column="is_hide" property="isHide" />
+        <result column="event_time" property="eventTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+</mapper>
