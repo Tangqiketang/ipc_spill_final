@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>websocket通讯</title>
+</head>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script>
+    var socket;
+    function openSocket() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            console.log("您的浏览器支持WebSocket");
+            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+            var socketUrl="http://10.1.101.113:12333/ipc_spill/imserver/"+$("#userId").val();
+            //var socketUrl="http://192.168.41.128:12444/ipc_spill/imserver/"+$("#userId").val();
+
+            socketUrl=socketUrl.replace("https","ws").replace("http","ws");
+            console.log(socketUrl);
+            if(socket!=null){
+                socket.close();
+                socket=null;
+            }
+            socket = new WebSocket(socketUrl);
+            //打开事件
+            socket.onopen = function() {
+                console.log("websocket已打开");
+                //socket.send("这是来自客户端的消息" + location.href + new Date());
+            };
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                console.log(msg.data);
+                //发现消息进入    开始处理前端触发逻辑
+                onMessage(msg);
+
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("websocket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                console.log("websocket发生了错误");
+            }
+        }
+    }
+    function sendMessage() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            console.log("您的浏览器支持WebSocket");
+            console.log('{"toUserId":"'+$("#toUserId").val()+'","contentText":"'+$("#contentText").val()+'"}');
+            socket.send('{"toUserId":"'+$("#toUserId").val()+'","contentText":"'+$("#contentText").val()+'"}');
+            writeToScreen('<span style="color: red;">'+getNowTime()+'   '+$("#userId").val()+":"+ $("#contentText").val()+'</span>');
+        }
+    }
+
+    function onMessage(evt) {
+        var body = evt.data;
+        if(typeof(body)=="string"){
+            try{
+                var obj = JSON.parse(body);
+                if(typeof obj == 'object' && obj ){
+                    writeToScreen('<span style="color: blue;">'+getNowTime()+'   '+obj.fromUserId+'回复:'+ obj.contentText+'</span>');
+                }else{
+                    receiveFromSerser(evt);
+                }
+            }catch (e) {
+                receiveFromSerser(evt);
+            }
+        }
+        //socket.close();
+    }
+
+    function receiveFromSerser(evt){
+        writeToScreen('<span style="color: blue;">'+getNowTime()+'   '+'服务器回复: '+ evt.data+'</span>');
+    }
+
+    function writeToScreen(message) {
+        var output = document.getElementById("record");
+        var pre = document.createElement("p");
+        pre.style.wordWrap = "break-word";
+        pre.innerHTML = message;
+        output.appendChild(pre);
+    }
+
+     function getNowTime() {
+        var date = new Date();
+        this.year = date.getFullYear();
+        this.month = date.getMonth() + 1;
+        this.date = date.getDate();
+        this.hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        this.minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        this.second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        var currentTime = this.year+'-'+this.month + '-' + this.date + ' ' + this.hour + ':' + this.minute + ':' + this.second;
+        return currentTime;
+    }
+
+</script>
+<body>
+<p>【welcome 实时聊天室】：
+<p>【请输入用户姓名简写,例如:张三 zs,李四 ls之后，点击开启聊天】：
+<p>【发送方姓名】：<div><input id="userId" name="userId" type="text" value="10"></div>
+<p>【接收方姓名】：<div><input id="toUserId" name="toUserId" type="text" value="20"></div>
+<p>【填写姓名后】：<div><button onclick="openSocket()">点击开启聊天</button></div>
+<p>【要发送的内容】：<div><input id="contentText" name="contentText" onfocus="this.value=''" type="text" value="填写要发送的消息"></div>
+<!--<p>【接受到的内容】：<div><input id="receiveText" name="receiveText" type="text" value=""></div>-->
+<p>【操作】：<div><button onclick="sendMessage()">发送消息</button></div>
+<p>【聊天记录】<div id="record"></div>
+</body>
+
+</html>
