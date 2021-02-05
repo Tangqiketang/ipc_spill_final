@@ -1,5 +1,6 @@
 package com.zdhk.ipc.controller;
 
+import com.zdhk.ipc.annotation.NoRepeatSubmit;
 import com.zdhk.ipc.constant.BASE_JSON_CODE;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.exception.ReqException;

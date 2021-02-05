@@ -1,4 +1,4 @@
-package com.zdhk.ipc.websocket;
+package com.zdhk.ipc.protocal.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

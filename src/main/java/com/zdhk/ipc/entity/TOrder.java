@@ -1,5 +1,6 @@
 package com.zdhk.ipc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import java.io.Serializable;
@@ -32,6 +33,9 @@ private static final long serialVersionUID=1L;
     private Date createTime;
 
     private String userName;
+
+    @TableField(exist = false)
+    private Integer rowNum;
 
 
     @Override

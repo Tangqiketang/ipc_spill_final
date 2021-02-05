@@ -27,6 +27,8 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Resource
     private JwtUtil jwtUtil;
 
+    public static String HEAD_TOKEN = "token";
+
 
     @Override
     public boolean preHandle(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Object handler) throws IOException {
@@ -38,7 +40,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         HttpServletResponse response = (HttpServletResponse)servletResponse;
         String url = request.getRequestURI();
 
-        String token = request.getHeader("token");
+        String token = request.getHeader(HEAD_TOKEN);
         if(RequestMethod.OPTIONS.name().equals(request.getMethod())){
             response.setStatus(HttpServletResponse.SC_OK);
             return true;

@@ -1,23 +1,28 @@
 package com.zdhk.ipc.controller;
 
 
+import ch.qos.logback.core.util.TimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.entity.IpcCamera;
+import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.service.IIpcCameraService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
+import java.util.concurrent.Future;
 
 /**
  * <p>
@@ -104,5 +109,28 @@ public class IpcCameraController {
     public String testVideoUrl(){
         return "video";
     }
+
+
+    /**
+     * 需要等待返回值的异步
+     * @param i
+     * @return
+     */
+    @Async
+    public Future<TOrder> doReturn(String i){
+        try {
+            Thread.sleep(5000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        TOrder order = new TOrder();
+        order.setName("5000name"+i);
+        return new AsyncResult<>(order);
+    }
+
+
+
+
+
 }
 

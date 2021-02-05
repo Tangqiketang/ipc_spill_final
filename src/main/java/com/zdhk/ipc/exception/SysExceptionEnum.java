@@ -13,6 +13,7 @@ public enum SysExceptionEnum implements ExceptionEnum {
     UNKNOWN_ERROR(-1, "未知错误"),
     BAD_REQUEST_PARAM_MISS(400, "非法请求，参数缺失"),
     BAD_REQUEST_PARAM_ERROR(400, "非法请求，参数错误"),
+    BAD_REQUEST_PARAM_REPEAT(400, "重复请求"),
     SYSTEM_ERROR(500, "系统错误"),
     FEIGN_ERROR(500, "系统错误，参数转换失败");
     public int code;

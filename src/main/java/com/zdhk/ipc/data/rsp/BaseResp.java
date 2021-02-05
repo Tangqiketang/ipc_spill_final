@@ -2,6 +2,7 @@ package com.zdhk.ipc.data.rsp;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.zdhk.ipc.exception.meta.ExceptionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -47,6 +48,12 @@ public class BaseResp<T> implements Serializable {
 		this.desc = desc;
 		this.result = result;
 	}
+
+	public BaseResp(ExceptionEnum exEnum){
+    	this.code = exEnum.getCode();
+    	this.desc = exEnum.getMessage();
+	}
+
 
 	public int getCode() {
 		return code;

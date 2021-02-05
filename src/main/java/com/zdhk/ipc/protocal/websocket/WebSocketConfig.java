@@ -1,4 +1,4 @@
-package com.zdhk.ipc.websocket;
+package com.zdhk.ipc.protocal.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

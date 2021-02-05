@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.mapper.TOrderMapper;
+import com.zdhk.ipc.sharding.ShardingUtils;
 import com.zdhk.ipc.utils.MyDateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.constraints.Min;
 import java.util.Date;
+import java.util.List;
+
 import com.zdhk.ipc.annotation.DateValue;
 
 /**
@@ -50,7 +54,7 @@ public class ShardingOrderController {
 
 
     /**
-     * 按范围查找
+     * 按范围查找 (分表之后查询带上时间戳字段,能快速定位表)
      * @param startTime
      * @param endTime
      * @return
@@ -81,6 +85,35 @@ public class ShardingOrderController {
         Page<TOrder> list = (Page<TOrder>) tOrderMapper.selectPage(pageParam,wrapper);
         rsp.setResult(list);
         return rsp;
+    }
+
+
+    /**
+     * 从第二页开始lastCreateTime和lastRowNum为必选参数
+     */
+    @ApiOperation(value = "无限滚动分页查询", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "lastCreateTime", value = "上一页最后一条数据的创建时间", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "lastRowNum", value = "上一页最后一条数据的行号", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "每页条数", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "userName", value = "用户名", dataType = "String", paramType = "query")
+    })
+    @GetMapping("/listPageByTime")
+    public BaseResp listPageByTime(String lastCreateTime, Integer lastRowNum, Integer size, String userName) {
+        BaseResp rsp = new BaseResp();
+
+        //lastCreateTime 有助于快速定位当前查询的分表 ，如果是第一页则可不传，默认使用当前时间
+        Date date = StringUtils.isBlank(lastCreateTime) ? new Date() : MyDateUtils.getDateByyyyyMMddhhmmss(lastCreateTime);
+        String suffix = ShardingUtils.getSuffixByYearMonth(date);
+        int resultSize = size == null ? 10 : size;
+        //rowNum用于获取当前页数据的起始位置，如果是第一页可以不传，默认为0
+        int rowNum = lastRowNum == null ? 0 : lastRowNum;
+
+        List<TOrder> list = tOrderMapper.listByRowNum(suffix, resultSize, rowNum, userName);
+
+        rsp.setResult(list);
+        return rsp;
+
     }
 
 }

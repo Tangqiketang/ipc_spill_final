@@ -1,11 +1,14 @@
 package com.zdhk.ipc.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -576,4 +579,5 @@ public class RedisUtil {
 	public Set<String> keys(String key){
 		return redisTemplate.keys(key);
 	}
+
 }

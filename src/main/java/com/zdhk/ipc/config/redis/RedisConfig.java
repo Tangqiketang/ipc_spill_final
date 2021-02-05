@@ -1,9 +1,11 @@
-package com.zdhk.ipc.config;
+package com.zdhk.ipc.config.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zdhk.ipc.data.constant.CacheConstant;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -16,6 +18,9 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.Duration;
@@ -26,8 +31,8 @@ import static java.util.Collections.singletonMap;
 @EnableCaching // 开启缓存支持
 public class RedisConfig extends CachingConfigurerSupport {
 
-	@Resource
-	private LettuceConnectionFactory lettuceConnectionFactory;
+	//@Resource
+	//private LettuceConnectionFactory lettuceConnectionFactory;
 
 //	/**
 //	 * @description 自定义的缓存key的生成策略 若想使用这个key
@@ -49,6 +54,21 @@ public class RedisConfig extends CachingConfigurerSupport {
 //		};
 //	}
 
+/*
+	    @Bean
+    public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
+        return new RestTemplate(factory);
+    }
+
+    @Bean
+    public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(5000);//ms
+        factory.setConnectTimeout(15000);//ms
+        return factory;
+    }*/
+
+
 	/**
 	 * RedisTemplate配置
 	 *
@@ -62,6 +82,9 @@ public class RedisConfig extends CachingConfigurerSupport {
 		ObjectMapper om = new ObjectMapper();
 		om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 		om.enableDefaultTyping(DefaultTyping.NON_FINAL);
+		// 解决jackson2无法反序列化LocalDateTime的问题
+		om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		om.registerModule(new JavaTimeModule());
 		jackson2JsonRedisSerializer.setObjectMapper(om);
 		// 配置redisTemplate
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
