@@ -28,6 +28,9 @@
         <javacpp.version>1.4.1</javacpp.version>
         <!-- ffmpeg版本 -->
         <ffmpeg.version>3.4.2-1.4.1</ffmpeg.version>
+        <docker.image.prefix>ipc</docker.image.prefix>
+        <!-- docker harbor地址 -->
+        <docker.repostory>192.168.41.128:10080</docker.repostory>
     </properties>
 
     <dependencies>
@@ -97,10 +100,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
@@ -274,10 +273,6 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
         <!--mqtt-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -394,7 +389,7 @@
             <artifactId>spill</artifactId>
             <version>1.2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/examples.jar</systemPath>
+            <systemPath>${pom.basedir}/src/main/resources/lib/examples.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -402,7 +397,7 @@
             <artifactId>spill2</artifactId>
             <scope>system</scope>
             <version>1.2</version>
-            <systemPath>${project.basedir}/src/main/resources/lib/jna.jar</systemPath>
+            <systemPath>${pom.basedir}/src/main/resources/lib/jna.jar</systemPath>
         </dependency>
 
         <!-- javacv  视频解析-->
@@ -425,11 +420,6 @@
         </dependency>-->
         <!--add end-->
 
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.9</version>
-        </dependency>
 
         <!-- commons -->
         <dependency>
@@ -462,20 +452,6 @@
             <version>4.5.3</version>
         </dependency>
 
-        <!--shardingsphere start-->
-        <!--<dependency>
-            <groupId>io.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-namespace</artifactId>
-            <version>3.1.0</version>
-        </dependency>-->
-
-        <!--shardingsphere end-->
-
 
         <!-- sharding apache最新孵化的版本 -->
         <dependency>
@@ -498,7 +474,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>1.3.1</version>
@@ -507,7 +483,7 @@
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
         <resources>
             <resource>
