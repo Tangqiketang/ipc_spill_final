@@ -148,6 +148,10 @@ wechat:
   appsecret: 9c7d8c8235a1fa11424562138d871e53
   redirect_Uri: http://www.dahuaweb.com/wmwx/test/aems/wxAuth
   checkToken: xhtest123
+  #小程序
+  mini:
+    appID: aaaaaaaaaaaa
+    appsecret: sssssssssssssss
 
 activeMq:
   manDun:

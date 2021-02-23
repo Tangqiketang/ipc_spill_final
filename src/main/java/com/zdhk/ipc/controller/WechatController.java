@@ -1,13 +1,16 @@
 package com.zdhk.ipc.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zdhk.ipc.data.constant.Actions;
 import com.zdhk.ipc.data.constant.ResultCode;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.exception.ReqException;
+import com.zdhk.ipc.utils.HttpUtil;
 import com.zdhk.ipc.utils.WechatUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -33,10 +36,54 @@ public class WechatController {
     @Value("${wechat.redirect_Uri}")
     private String redirect_Uri;
 
+
+    @Value("${wechat.mini.appID}")
+    private String miniAppId;
+
+    @Value("${wechat.mini.appsecret}")
+    private String miniAppsecret;
+
+
     @Autowired
     private WechatUtil wechatUtil;
 
+    /**
+     * 微信小程序登录
+     * @param code
+     * @return
+     */
+    @PostMapping("/mini/login")
+    @ResponseBody
+    public BaseResp mini_Login(@Param("code") String code) throws Exception {
+        BaseResp res=new BaseResp();//这里是自定义类，用于封装返回的数据，你可以用map替代
 
+        //请求微信服务器，用code换取openid。HttpUtil是工具类，后面会给出实现，Configure类是小程序配置信息，后面会给出代码
+        String result = HttpUtil.doGet(
+                    "https://api.weixin.qq.com/sns/jscode2session?appid="
+                            + miniAppId + "&secret="
+                            + miniAppsecret + "&js_code="
+                            + code
+                            + "&grant_type=authorization_code", null);
+
+        //System.out.println(result);
+        JSONObject userInfo = JSON.parseObject(result);//解析从微信服务器上获取到的json字符串
+        log.info("用户登录,微信返回信息:"+userInfo);
+        String openId = userInfo.getString("openid");
+        String session_key =  userInfo.getString("session_key");
+        //TODO 根据openid查询用户是否新用户,如果是新用户新增到数据库
+
+        //返回用户信息
+        return res;
+    }
+
+
+    /**
+     * 微信公众号
+     * @param action
+     * @param req
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/aems/api/1/{action}", method= RequestMethod.POST, produces="application/json; charset=UTF-8")
     public @ResponseBody
     BaseResp userBase(@PathVariable String action, @RequestBody String req) throws Exception {

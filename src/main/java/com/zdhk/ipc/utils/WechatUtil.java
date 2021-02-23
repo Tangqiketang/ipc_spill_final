@@ -21,6 +21,17 @@ public class WechatUtil {
     @Autowired
     private ObjectMapper objectMapper;
 
+
+
+
+    /**
+     * 微信公众号
+     * @param code
+     * @param appid
+     * @param secret
+     * @return
+     * @throws Exception
+     */
     public  String getopenId(String code, String appid, String secret) throws Exception {
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appid + "&secret=" + secret + "&code="
                 + code + "&grant_type=" + "authorization_code";
