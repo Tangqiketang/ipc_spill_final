@@ -55,24 +55,32 @@ public class WechatController {
     @PostMapping("/mini/login")
     @ResponseBody
     public BaseResp mini_Login(@Param("code") String code) throws Exception {
-        BaseResp res=new BaseResp();//这里是自定义类，用于封装返回的数据，你可以用map替代
+        BaseResp res=new BaseResp();
 
-        //请求微信服务器，用code换取openid。HttpUtil是工具类，后面会给出实现，Configure类是小程序配置信息，后面会给出代码
+        //请求微信服务器，用code换取openid
         String result = HttpUtil.doGet(
                     "https://api.weixin.qq.com/sns/jscode2session?appid="
                             + miniAppId + "&secret="
                             + miniAppsecret + "&js_code="
                             + code
                             + "&grant_type=authorization_code", null);
-
-        //System.out.println(result);
-        JSONObject userInfo = JSON.parseObject(result);//解析从微信服务器上获取到的json字符串
-        log.info("用户登录,微信返回信息:"+userInfo);
+        JSONObject userInfo = JSON.parseObject(result);
+        log.info("用户登录,微信返回信息,解密前:"+userInfo);
         String openId = userInfo.getString("openid");
-        String session_key =  userInfo.getString("session_key");
-        //TODO 根据openid查询用户是否新用户,如果是新用户新增到数据库
+        String session_key =  userInfo.getString("session_key"); //会话密钥,不应该下发到小程序
 
-        //返回用户信息
+        boolean existUser = true;
+        if(existUser){
+
+        }else{
+            //TODO 根据openid和手机号查询用户是否新用户,如果是新用户新增到数据库。
+            String encryptedData = userInfo.getString("encryptedData");
+            String iv = userInfo.getString("iv");
+            JSONObject userData= wechatUtil.getUserInfo(encryptedData,session_key,iv);
+            log.info("用户登录,微信返回信息,解密后:"+userData);
+        }
+        //返回用户信息 后台生成token-openid-session
+
         return res;
     }
 

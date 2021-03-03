@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +23,9 @@ import java.util.List;
  * @create 2021-01-15 16:57
  */
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestDVS {
+public class TestDVS extends BaseTest{
 
-    @Autowired
+    @Resource
     private IpcEventMapper ipcEventMapper;
 
     @Test

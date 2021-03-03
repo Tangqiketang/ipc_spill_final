@@ -12,6 +12,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class App {
 
     public static void main(String[] args) {
+        //elasticsearch自身的netty冲突
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
+
 
         SpringApplication.run(App.class, args);
 

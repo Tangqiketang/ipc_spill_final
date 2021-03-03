@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,11 +30,10 @@ import java.util.List;
  * @create 2021-01-15 16:57
  */
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestDect {
 
-    @Autowired
+public class TestDect extends BaseTest{
+
+    @Resource
     private IpcEventMapper ipcEventMapper;
 
     @Test
