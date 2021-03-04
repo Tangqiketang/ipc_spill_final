@@ -24,6 +24,6 @@ alicloud:
 
 app:
   location:
-    win: C:/opt/upgrade/app_upload/
+    win: D:/opt/upgrade/app_upload/
     lin: /opt/upgrade/app_upload/
 
