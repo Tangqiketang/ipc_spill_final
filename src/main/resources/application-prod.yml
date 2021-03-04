@@ -98,7 +98,7 @@ spring:
       db0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://mysql:3306/test1_sharding?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+        jdbc-url: jdbc:mysql://10.0.40.91:3306:3306/test1_sharding?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: 123456
     sharding:

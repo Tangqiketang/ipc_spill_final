@@ -1,6 +1,5 @@
 package com.zdhk.ipc.controller;
 
-import com.zdhk.ipc.annotation.NoRepeatSubmit;
 import com.zdhk.ipc.constant.BASE_JSON_CODE;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.exception.ReqException;
@@ -11,7 +10,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 
 /**
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
  * @author Wang Min
  * @since 2020-11-12
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @Api(tags={"用户管理"})
@@ -36,6 +38,8 @@ public class UserController {
     @ResponseBody
     public BaseResp login(@RequestParam(name = "userName", required = true)String userName,
                           @RequestParam(name = "passWord", required = true)String passWord){
+
+
         BaseResp rsp =  loginService.userLogin(userName,passWord);
         return rsp;
     }

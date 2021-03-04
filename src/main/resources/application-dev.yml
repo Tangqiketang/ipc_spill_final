@@ -20,7 +20,7 @@ logging:
   path: /opt/upgrade/logs/prod/
   config: classpath:logback-spring.xml
   level:
-    root: info
+    root: debug
 
 
 spring:
