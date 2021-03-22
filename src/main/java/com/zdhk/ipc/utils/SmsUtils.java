@@ -7,7 +7,6 @@ import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
-import com.github.qcloudsms.SmsSingleSender;
 import com.zdhk.ipc.dto.SmsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,13 +32,16 @@ public class SmsUtils {
     private String accessSecret;
     @Value("${alicloud.sms.signName}")
     private String signName;
-    @Value("${alicloud.sms.templateCode}")
-    private String templateCode;
+
+    @Value("${alicloud.sms.regist.templateCode}")
+    private String registTemplateCode;
+    @Value("${alicloud.sms.modify.templateCode}")
+    private String modifyTemplateCode;
 
     @Resource
     RedisUtil redisUtil;
 
-    public String sendMessage(String phoneNumber) {
+/*    public String sendMessage(String phoneNumber) {
         String resultString = null;
         String code = RandomUtil.keyUtils();
         String[] params = {code};
@@ -53,10 +55,10 @@ public class SmsUtils {
             return resultString;
         }
         return resultString;
-    }
+    }*/
 
 
-    public String sendSms(String phoneNumber){
+    public String sendSms(String phoneNumber,Integer type){
         String resultString = null;
         String code = RandomUtil.keyUtils();
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessSecret);
@@ -70,7 +72,11 @@ public class SmsUtils {
         request.putQueryParameter("RegionId", "cn-hangzhou");
         request.putQueryParameter("PhoneNumbers", phoneNumber);
         request.putQueryParameter("SignName", signName);
-        request.putQueryParameter("TemplateCode", templateCode);
+        if(type == 0){
+            request.putQueryParameter("TemplateCode", registTemplateCode);
+        }else{
+            request.putQueryParameter("TemplateCode", modifyTemplateCode);
+        }
         SmsDto sms = new SmsDto();
         sms.setCode(code);
         request.putQueryParameter("TemplateParam", JSONObject.toJSON(sms).toString());

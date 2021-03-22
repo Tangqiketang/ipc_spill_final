@@ -14,9 +14,9 @@ public interface LoginService {
 
     BaseResp<TerminalAccessVO> getToken(String userName, String passWord);
 
-    void userExsistCheck(String userName, int i);
+    void userExsistCheck(String userName, int type);
 
-    String getSmsCode(String userName);
+    String getSmsCode(String userName,int type);
 
     BaseResp resetPassword(String userName, String passWord);
 }

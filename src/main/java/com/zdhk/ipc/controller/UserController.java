@@ -98,21 +98,22 @@ public class UserController {
 
 
 
-    @ApiOperation("获取短信验证码")
+    @ApiOperation("获取短信验证码，已经接入正式短信平台，请勿乱点，以免产生不必要的费用")
     @ApiImplicitParams({
-            @ApiImplicitParam(name ="userName",value = "用户名", required = true)
+            @ApiImplicitParam(name ="userName",value = "用户名", required = true),
+            @ApiImplicitParam(name ="type",value = "类型：0，注册|1，忘记密码", required = true)
     })
     @RequestMapping(value = "/getSmsCode", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResp getSmsCode(@RequestParam(name = "userName", required = true)String userName){
+    public BaseResp getSmsCode(@RequestParam(name = "userName", required = true)String userName,@RequestParam(name = "type", required = true)Integer type){
         BaseResp rsp = new BaseResp<>();
         if(ValidateUtil.validatePhone(userName) == false){
             throw new ReqException("输入的手机号格式不对",BASE_JSON_CODE.COMMON_FAIL.getCode());
         }
         //注册或忘记密码的短信,需要先校验用户是否存在
-        loginService.userExsistCheck(userName,0);
+        loginService.userExsistCheck(userName,type);
 
-        String smsCode = loginService.getSmsCode(userName);
+        String smsCode = loginService.getSmsCode(userName,type);
         rsp.setDesc(smsCode);
         return rsp;
     }

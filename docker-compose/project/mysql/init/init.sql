@@ -170,6 +170,18 @@ INSERT INTO `sys_user_role` VALUES (4, 5, 2);
 INSERT INTO `sys_user_role` VALUES (5, 6, 2);
 INSERT INTO `sys_user_role` VALUES (6, 7, 2);
 
+
+-- ----------------------------
+-- Table structure for sys_user_wechat
+-- ----------------------------
+CREATE TABLE `sys_user_wechat` (
+ `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+`username` varchar(100) DEFAULT NULL COMMENT '手机号',
+`open_id` varchar(100) DEFAULT NULL COMMENT '微信openid',
+ PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户手机号与openid映射表';
+
+
 -- ----------------------------
 -- Table structure for t_order
 -- ----------------------------

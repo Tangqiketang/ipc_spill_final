@@ -19,8 +19,12 @@ alicloud:
   sms:
     accessKeyId: 123
     accessSecret: 123
-    signName: 123
-    templateCode: 123
+    signName: zdhk
+    regist:
+      templateCode: SMS_206575360
+    modify:
+      templateCode: SMS_206575360
+
 
 app:
   location:

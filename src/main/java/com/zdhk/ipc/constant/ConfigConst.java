@@ -30,4 +30,16 @@ public class ConfigConst {
 
         public static final String SMS_LIST_LIMIT ="sms:list:limit:";
     }
+
+
+    public class mini{
+        /**
+         * redis中存放access_token的key值
+         */
+        public final static String ACCESS_TOKEN_KEY = "accessToken";
+        /**
+         * redis中存放获取失败的错误信息的key值
+         */
+        public final static String ERROR_KEY = "accessToken";
+    }
 }

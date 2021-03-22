@@ -3,11 +3,14 @@ package com.zdhk.ipc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdhk.ipc.constant.ConfigConst;
 import com.zdhk.ipc.constant.ResponseEnum;
-import com.zdhk.ipc.data.constant.CommonConstant;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.dto.UserMenuDto;
-import com.zdhk.ipc.entity.*;
+import com.zdhk.ipc.entity.SysPermission;
+import com.zdhk.ipc.entity.SysRolePermission;
+import com.zdhk.ipc.entity.SysUser;
+import com.zdhk.ipc.entity.SysUserRole;
 import com.zdhk.ipc.exception.ReqException;
+import com.zdhk.ipc.mapper.SysRolePermissionMapper;
 import com.zdhk.ipc.mapper.SysUserMapper;
 import com.zdhk.ipc.service.LoginService;
 import com.zdhk.ipc.service.UserService;
@@ -23,7 +26,10 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 描述:
@@ -47,6 +53,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Resource
     SmsUtils smsUtils;
+
+    @Resource
+    private SysRolePermissionMapper rolePermissionMapper;
 
     @Override
     public BaseResp userLogin(String userName, String passWord) {
@@ -140,14 +149,18 @@ public class LoginServiceImpl implements LoginService {
             log.error("regist user_role fail",e);
             throw new ReqException("注册失败",400);
         }
-        SysRolePermission sysRolePermission = new SysRolePermission();
-        sysRolePermission.setRoleId(sysUserRole.getRoleId());
-        sysRolePermission.setPermissionId(ConfigConst.NORMAL_MENU);
-        try {
-            sysRolePermission.insert();
-        }catch (Exception e){
-            log.error("regist role_permission fail",e);
-            throw new ReqException("注册失败",400);
+
+        List<SysRolePermission> perminssionList = rolePermissionMapper.selectList(new LambdaQueryWrapper<SysRolePermission>().eq(SysRolePermission::getRoleId,sysUserRole.getRoleId()).eq(SysRolePermission::getPermissionId,ConfigConst.NORMAL_MENU));
+        if(!(perminssionList != null && perminssionList.size() >0)){
+            SysRolePermission sysRolePermission = new SysRolePermission();
+            sysRolePermission.setRoleId(sysUserRole.getRoleId());
+            sysRolePermission.setPermissionId(ConfigConst.NORMAL_MENU);
+            try {
+                sysRolePermission.insert();
+            }catch (Exception e){
+                log.error("regist role_permission fail",e);
+                throw new ReqException("注册失败",400);
+            }
         }
 
         TerminalAccessVO access = new TerminalAccessVO();
@@ -187,17 +200,22 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void userExsistCheck(String userName, int state) {
         BaseResp result = new BaseResp();
+        SysUser sysUserExist = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername,userName));
         if(state == 0){
-            SysUser sysUserExist = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername,userName));
             if(sysUserExist != null){
                 throw new ReqException(ResponseEnum.USER_NAME_EXIST.getMessage(),ResponseEnum.USER_NAME_EXIST.getCode());
+            }
+        }
+        if(state == 1){
+            if(sysUserExist == null){
+                throw new ReqException(ResponseEnum.USER_NOT_EXIST.getMessage(),ResponseEnum.USER_NOT_EXIST.getCode());
             }
         }
     }
 
 
     @Override
-    public String getSmsCode(String userName) {
+    public String getSmsCode(String userName,int type) {
         //一分钟之内不能获取
         if( redisUtil.hasKey(ConfigConst.sms.SMS_REQUEST_LIMIT+userName)){
             throw new ReqException(ResponseEnum.USER_NAME_SMS_LIMIT.getMessage(),ResponseEnum.USER_NAME_SMS_LIMIT.getCode());
@@ -209,14 +227,14 @@ public class LoginServiceImpl implements LoginService {
             if(size >= 5){
                 throw new ReqException(ResponseEnum.USER_NAME_SMS_LIST_LIMIT.getMessage(),ResponseEnum.USER_NAME_SMS_LIST_LIMIT.getCode());
             }else{
-                smsCode = smsUtils.sendSms(userName);
+                smsCode = smsUtils.sendSms(userName,type);
                 if(smsCode == null || smsCode.equals("fail")){
                     throw new ReqException(ResponseEnum.USER_NAME_SMS_ERROR.getMessage(),ResponseEnum.USER_NAME_SMS_ERROR.getCode());
                 }
                 redisUtil.lSet(ConfigConst.sms.SMS_LIST_LIMIT+userName, 1);
             }
         }else{
-            smsCode = smsUtils.sendSms(userName);
+            smsCode = smsUtils.sendSms(userName,type);
             if(smsCode == null || smsCode.equals("fail")){
                 throw new ReqException(ResponseEnum.USER_NAME_SMS_ERROR.getMessage(),ResponseEnum.USER_NAME_SMS_ERROR.getCode());
             }

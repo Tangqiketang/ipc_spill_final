@@ -5,15 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.zdhk.ipc.constant.ConfigConst;
 import com.zdhk.ipc.exception.ReqException;
-import io.micrometer.core.instrument.util.JsonUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -25,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -32,11 +36,114 @@ public class WechatUtil {
     private final static Logger log = LoggerFactory.getLogger(WechatUtil.class);
     @Value("${wechat.checkToken}")
     private String checkToken;
+
+
+    @Value("${wechat.mini.appID}")
+    private String miniAppId;
+
+    @Value("${wechat.mini.appsecret}")
+    private String miniAppsecret;
+
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Resource
+    RestTemplate restTemplate;
+
+    @Resource
+    RedisUtil redisUtil;
 
 
+
+    public  JSONObject getSessionKeyOrOpenId(String code) {
+        String requestUrl = "https://api.weixin.qq.com/sns/jscode2session";
+        Map<String, String> requestUrlParam = new HashMap<>();
+        // https://mp.weixin.qq.com/wxopen/devprofile?action=get_profile&token=164113089&lang=zh_CN
+        //小程序appId
+        requestUrlParam.put("appid", miniAppId);
+        //小程序secret
+        requestUrlParam.put("secret", miniAppsecret);
+        //小程序端返回的code
+        requestUrlParam.put("js_code", code);
+        //默认参数
+        requestUrlParam.put("grant_type", "authorization_code");
+        //发送post请求读取调用微信接口获取openid用户唯一标识
+        JSONObject jsonObject = JSON.parseObject(HttpClientUtil.doPost(requestUrl, requestUrlParam));
+        return jsonObject;
+    }
+
+    public  JSONObject getMiniUserInfo(String encryptedData, String sessionKey, String iv) {
+        // 被加密的数据
+        byte[] dataByte = Base64.decode(encryptedData);
+        // 加密秘钥
+        byte[] keyByte = Base64.decode(sessionKey);
+        // 偏移量
+        byte[] ivByte = Base64.decode(iv);
+        try {
+            // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
+            int base = 16;
+            if (keyByte.length % base != 0) {
+                int groups = keyByte.length / base + (keyByte.length % base != 0 ? 1 : 0);
+                byte[] temp = new byte[groups * base];
+                Arrays.fill(temp, (byte) 0);
+                System.arraycopy(keyByte, 0, temp, 0, keyByte.length);
+                keyByte = temp;
+            }
+            // 初始化
+            Security.addProvider(new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
+            SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
+            AlgorithmParameters parameters = AlgorithmParameters.getInstance("AES");
+            parameters.init(new IvParameterSpec(ivByte));
+            cipher.init(Cipher.DECRYPT_MODE, spec, parameters);// 初始化
+            byte[] resultByte = cipher.doFinal(dataByte);
+            if (null != resultByte && resultByte.length > 0) {
+                String result = new String(resultByte, "UTF-8");
+                return JSON.parseObject(result);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    //@Scheduled(initialDelay = 10000, fixedRate = 6600000)
+    public void creatAccessToken() {
+        String url = "https://api.weixin.qq.com/cgi-bin/token";
+        String path = "?grant_type={grant_type}&appid={appid}&secret={secret}";
+        Map<String, String> params = new HashMap<>(3);
+        params.put("grant_type", "client_credential");
+        params.put("appid", miniAppId);
+        params.put("secret", miniAppsecret);
+        ResponseEntity<String> forObject = restTemplate.getForEntity(url + path, String.class, params);
+        JSONObject jsonObject = JSONObject.parseObject(forObject.getBody());
+        String accessToken = jsonObject.getString("access_token");
+        // accessToken获取成功
+        if (accessToken != null) {
+            //有效期设置1小时55分钟
+            redisUtil.set(ConfigConst.mini.ACCESS_TOKEN_KEY, accessToken, 115 * 60);
+        } else {
+            redisUtil.set(ConfigConst.mini.ERROR_KEY, forObject.getBody());
+        }
+    }
+
+    /**
+     * 获取微信小程序accesstoken
+     * @return
+     */
+    public String getAccessTokenFromRedis(){
+        if(!redisUtil.hasKey(ConfigConst.mini.ACCESS_TOKEN_KEY)){
+            creatAccessToken();
+        }
+        return redisUtil.get(ConfigConst.mini.ACCESS_TOKEN_KEY).toString();
+    }
+
+
+
+
+
+
+
+    /*******************************************公众号*********************************************************/
 
     /**
      * 微信公众号

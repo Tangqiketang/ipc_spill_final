@@ -1,31 +1,35 @@
 package com.zdhk.ipc.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zdhk.ipc.auth.context.UserContext;
 import com.zdhk.ipc.data.constant.Actions;
 import com.zdhk.ipc.data.constant.ResultCode;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.exception.ReqException;
-import com.zdhk.ipc.utils.HttpUtil;
+import com.zdhk.ipc.service.WXUserService;
 import com.zdhk.ipc.utils.WechatUtil;
+import com.zdhk.ipc.vo.UserInfoVO;
+import com.zdhk.ipc.vo.WeChatLoginVO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 
 @Controller
 @Slf4j
 public class WechatController {
-
 
     @Value("${wechat.appID}")
     private String appID;
@@ -36,54 +40,47 @@ public class WechatController {
     @Value("${wechat.redirect_Uri}")
     private String redirect_Uri;
 
-
     @Value("${wechat.mini.appID}")
     private String miniAppId;
 
     @Value("${wechat.mini.appsecret}")
     private String miniAppsecret;
 
-
     @Autowired
     private WechatUtil wechatUtil;
 
-    /**
-     * 微信小程序登录
-     * @param code
-     * @return
-     */
-    @PostMapping("/mini/login")
+    @Resource
+    private WXUserService wxUserService;
+
+    @ApiOperation("微信小程序登录")
+    @RequestMapping(value = "/mini/weChatLogin", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResp mini_Login(@Param("code") String code) throws Exception {
+    public BaseResp<WeChatLoginVO> weChatLogin(
+            @ApiParam(value = "微信返回的code", required = true) @RequestParam(value = "code") String code,
+            @ApiParam(value = "加密数据", required = true) @RequestParam(value = "encryptedData") String encryptedData,
+            @ApiParam(value = "加密密钥", required = true) @RequestParam(value = "iv") String iv,
+            @ApiParam(value = "纬度", required = true) @RequestParam(value = "latitude") BigDecimal latitude,
+            @ApiParam(value = "经度", required = true) @RequestParam(value = "longitude") BigDecimal longitude) {
         BaseResp res=new BaseResp();
 
-        //请求微信服务器，用code换取openid
-        String result = HttpUtil.doGet(
-                    "https://api.weixin.qq.com/sns/jscode2session?appid="
-                            + miniAppId + "&secret="
-                            + miniAppsecret + "&js_code="
-                            + code
-                            + "&grant_type=authorization_code", null);
-        JSONObject userInfo = JSON.parseObject(result);
-        log.info("用户登录,微信返回信息,解密前:"+userInfo);
-        String openId = userInfo.getString("openid");
-        String session_key =  userInfo.getString("session_key"); //会话密钥,不应该下发到小程序
+        BaseResp<WeChatLoginVO> result = wxUserService.weChatLogin(code, encryptedData, iv, latitude, longitude);
 
-        boolean existUser = true;
-        if(existUser){
-
-        }else{
-            //TODO 根据openid和手机号查询用户是否新用户,如果是新用户新增到数据库。
-            String encryptedData = userInfo.getString("encryptedData");
-            String iv = userInfo.getString("iv");
-            JSONObject userData= wechatUtil.getUserInfo(encryptedData,session_key,iv);
-            log.info("用户登录,微信返回信息,解密后:"+userData);
-        }
-        //返回用户信息 后台生成token-openid-session
-
-        return res;
+        return result;
     }
 
+    @ApiOperation("微信获取用户信息")
+    @RequestMapping(value = "/mini/getUserInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public BaseResp<UserInfoVO> weChatQueryUserInfo() {
+        BaseResp bj = new BaseResp();
+        Long userId = Long.valueOf(UserContext.getUserInfo().get().getUserId());
+        UserInfoVO userInfoVO;
+
+        return bj;
+    }
+
+
+    /********************************************公众号*******************************************************/
 
     /**
      * 微信公众号
