@@ -47,7 +47,8 @@ public class WebAppConfigure implements WebMvcConfigurer {
                 .excludePathPatterns("/user/**",
                                      "/orderTest/**",
                                       "/camera/**",
-                                      "/swagger-resources",
+                                      "/swagger-resources/**",
+                                      "/webjars/**",
                                       "/exclude/**");
     }
 
@@ -70,6 +71,7 @@ public class WebAppConfigure implements WebMvcConfigurer {
         String os = prop.getProperty("os.name");
         registry.addResourceHandler(new String[]{"swagger-ui.html"}).addResourceLocations(new String[]{"classpath:/META-INF/resources/"});
         registry.addResourceHandler(new String[]{"/webjars/**"}).addResourceLocations(new String[]{"classpath:/META-INF/resources/webjars/"});
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         if(os.startsWith("win") || os.startsWith("Win") ){
             registry.addResourceHandler(APP_UPLOAD + "**").addResourceLocations("file:///" + winLocation);
         }else{

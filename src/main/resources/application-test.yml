@@ -26,27 +26,6 @@ logging:
 spring:
   main:
     allow-bean-definition-overriding: true
-  kafka:
-    bootstrap-servers: 10.0.40.30:9092,10.0.40.31:9092,10.0.40.32:9092
-    consumer:
-      group-id: xhtest-group-yy
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      auto-offset-reset: earliest
-      enable-auto-commit: true
-      auto-commit-interval: 100
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      retries: 0
-      batch-size: 16384
-      buffer-memory: 33554432
-  data:
-    elasticsearch:
-      cluster-name: docker-cluster
-      cluster-nodes: 192.168.41.128:9300
-      repositories:
-        enabled: true
   activemq:
     user: 330103000000800036
     password: 123456

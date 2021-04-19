@@ -32,13 +32,13 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Object handler) throws IOException {
-        if (!(handler instanceof HandlerMethod)) { //拦截controller
-            return true;
-        }
-
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
         String url = request.getRequestURI();
+
+        if (!(handler instanceof HandlerMethod)) { //拦截controller
+            return true;
+        }
 
         String token = request.getHeader(HEAD_TOKEN);
         if(RequestMethod.OPTIONS.name().equals(request.getMethod())){

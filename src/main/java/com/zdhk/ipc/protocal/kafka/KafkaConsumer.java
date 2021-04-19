@@ -4,9 +4,8 @@ package com.zdhk.ipc.protocal.kafka;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Slf4j
 public class KafkaConsumer {
 

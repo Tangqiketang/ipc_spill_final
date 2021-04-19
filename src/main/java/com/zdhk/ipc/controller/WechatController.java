@@ -8,12 +8,16 @@ import com.zdhk.ipc.data.constant.ResultCode;
 import com.zdhk.ipc.data.rsp.BaseResp;
 import com.zdhk.ipc.exception.ReqException;
 import com.zdhk.ipc.service.WXUserService;
+import com.zdhk.ipc.utils.MyFileUtils;
 import com.zdhk.ipc.utils.WechatUtil;
 import com.zdhk.ipc.vo.UserInfoVO;
 import com.zdhk.ipc.vo.WeChatLoginVO;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,6 +28,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 
@@ -79,6 +84,24 @@ public class WechatController {
         return bj;
     }
 
+
+    @ApiOperation("终端激活并获取微信小程序二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name ="longitude",value = "经度", required = true),
+            @ApiImplicitParam(name ="latitude",value = "纬度", required = true),
+            @ApiImplicitParam(name ="imei",value = "设备唯一标识", required = true),
+            @ApiImplicitParam(name ="type",value = "设备类型", required = true)
+    })
+    @RequestMapping(value = "/getMiniQR", method = RequestMethod.POST)
+    @ResponseBody
+    public void getMiniQR(@RequestParam(name = "longitude", required = true) BigDecimal longitude, @RequestParam(name = "latitude", required = true)BigDecimal latitude,@RequestParam(name = "imei", required = true) String imei,@RequestParam(name = "type", required = true) Integer type) throws UnsupportedEncodingException {
+        String path =  wxUserService.terminalActiveAndGetQRcode(longitude,latitude,imei,type);
+        if(StringUtils.isNotBlank(path)) {
+            MyFileUtils.fileStream2Response(path);
+        }else{
+            throw new ReqException("小程序二维码不存在",400);
+        }
+    }
 
     /********************************************公众号*******************************************************/
 

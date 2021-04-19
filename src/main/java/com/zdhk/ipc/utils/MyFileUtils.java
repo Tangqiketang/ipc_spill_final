@@ -3,11 +3,15 @@ package com.zdhk.ipc.utils;
 import com.zdhk.ipc.data.constant.ResultCode;
 import com.zdhk.ipc.exception.ReqException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -159,6 +163,34 @@ public class MyFileUtils {
         }
     }
 
+
+    /**
+     * 保存文件
+     * @param file  C：/a/a.txt
+     * @param is
+     */
+    public static void writeFile(String file, InputStream is) {
+        File f = new File(file);
+        try {
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+                f.createNewFile();
+            }
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            BufferedInputStream bis = new BufferedInputStream(is);
+            byte[] b = new byte[1024 * 8];
+            int num = bis.read(b);
+            while (num != -1) {
+                bos.write(b, 0, num);
+                num = bis.read(b);
+            }
+            bis.close();
+            bos.close();
+        } catch (IOException e) {
+            log.error(file + "||writeError=========================");
+        }
+    }
+
     /**
      * 读文件
      *
@@ -249,5 +281,43 @@ public class MyFileUtils {
             first = true;
         }
         return mac.toString().toUpperCase();
+    }
+
+    /**
+     * 将文件流直接返回
+     * @param path 文件路径,如/xxx/xxx/a.txt
+     * @throws UnsupportedEncodingException
+     */
+    public static void fileStream2Response(String path) throws UnsupportedEncodingException {
+        File file = new File(path);
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        response.setHeader("content-type", "application/octet-stream");
+        response.setContentType("application/octet-stream");
+        response.setContentLength((int)file.length());
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+        byte[] buff = new byte[1024];
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        try {
+            os = response.getOutputStream();
+            bis = new BufferedInputStream(new FileInputStream(file));
+            int i = bis.read(buff);
+            while (i != -1) {
+                os.write(buff, 0, buff.length);
+                os.flush();
+                i = bis.read(buff);
+            }
+        } catch (Exception e) {
+            log.error("下载文件出错", e);
+
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
