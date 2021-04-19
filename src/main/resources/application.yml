@@ -3,8 +3,8 @@ spring:
     active: dev
 
 token:
-  expireTime: 1800 #秒
-  resetTime: 600 #秒,还剩多久刷新过期时间
+  expireTime: 86400000 #毫秒1天
+  resetTime: 600000 #秒,还剩多久刷新过期时间
   secret: 4yhq5AI1NUCHifrtiwvI5OkfFm/fIQ+Th5hv+HyIM58gY6d3pWXoBnYZyxNAp6m60Y8DEsE2gCOGPjHEmY8TyA==
 
 
