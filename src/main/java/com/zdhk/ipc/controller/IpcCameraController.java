@@ -1,7 +1,6 @@
 package com.zdhk.ipc.controller;
 
 
-import ch.qos.logback.core.util.TimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,6 +10,7 @@ import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.service.IIpcCameraService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,7 @@ import java.util.concurrent.Future;
 @Controller
 @RequestMapping("/camera")
 @Api(value = "相机",tags={"相机相关"})
+@Slf4j
 public class IpcCameraController {
 
     @Autowired
@@ -127,6 +128,23 @@ public class IpcCameraController {
         order.setName("5000name"+i);
         return new AsyncResult<>(order);
     }
+
+
+
+    /**
+     * 表单
+     * @param a
+     * @return
+     */
+    @ApiOperation(value = "test1", notes = "相机")
+    @PostMapping("/testyoyo1")
+    @ResponseBody
+    public BaseResp testyoyo1(@RequestBody String a,@RequestParam String test){
+
+        log.info("xxxxxxxx");
+        return null;
+    }
+
 
 
 

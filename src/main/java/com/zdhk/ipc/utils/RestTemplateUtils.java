@@ -55,7 +55,7 @@ public class RestTemplateUtils {
      * @param uriVariables URL中的变量，与Map中的key对应
      * @return ResponseEntity 响应对象封装类
      */
-    public  <T> ResponseEntity<T> get(String url, Class<T> responseType, Map<String, ?> uriVariables) {
+    public <T> ResponseEntity<T> get(String url, Class<T> responseType, Map<String, ?> uriVariables) {
         return restTemplate.getForEntity(url, responseType, uriVariables);
     }
 
@@ -83,7 +83,7 @@ public class RestTemplateUtils {
      * @param uriVariables URL中的变量，按顺序依次对应
      * @return ResponseEntity 响应对象封装类
      */
-    public  <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType, Object... uriVariables) {
+    public <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType, Object... uriVariables) {
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         return exchange(url, HttpMethod.GET, requestEntity, responseType, uriVariables);
     }
@@ -97,7 +97,7 @@ public class RestTemplateUtils {
      * @param uriVariables URL中的变量，与Map中的key对应
      * @return ResponseEntity 响应对象封装类
      */
-    public  <T> ResponseEntity<T> get(String url, Map<String, String> headers, Class<T> responseType, Map<String, ?> uriVariables) {
+    public <T> ResponseEntity<T> get(String url, Map<String, String> headers, Class<T> responseType, Map<String, ?> uriVariables) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAll(headers);
         return get(url, httpHeaders, responseType, uriVariables);
@@ -112,12 +112,12 @@ public class RestTemplateUtils {
      * @param uriVariables URL中的变量，与Map中的key对应
      * @return ResponseEntity 响应对象封装类
      */
-    public  <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType, Map<String, ?> uriVariables) {
+    public <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType, Map<String, ?> uriVariables) {
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         return exchange(url, HttpMethod.GET, requestEntity, responseType, uriVariables);
     }
 
-    // ----------------------------------POST-------------------------------------------------------
+// ----------------------------------POST-------------------------------------------------------
 
     /**
      * POST请求调用方式
@@ -614,6 +614,15 @@ public class RestTemplateUtils {
      */
     public  <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, Map<String, ?> uriVariables) {
         return restTemplate.exchange(url, method, requestEntity, responseType, uriVariables);
+    }
+
+    /**
+     * 获取RestTemplate实例对象，可自由调用其方法
+     *
+     * @return RestTemplate实例对象
+     */
+    public  RestTemplate getRestTemplate() {
+        return restTemplate;
     }
 
 

@@ -30,7 +30,7 @@ public class ServerIdleStateHandler extends IdleStateHandler {
 
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
-        log.info("{} 秒内没有读取到数据,关闭连接", READER_IDLE_TIME);
+        log.info("心跳时间内没有检测到内没有读取到数据,关闭连接");
         ctx.channel().close();
     }
 }

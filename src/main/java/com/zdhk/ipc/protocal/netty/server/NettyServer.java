@@ -8,7 +8,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,12 +30,6 @@ public class NettyServer implements CommandLineRunner {
     @Autowired
     private NettyServerHandler nettyServerHandler;
 
-    /**
-     *SpringBoot在项目启动后会遍历所有实现CommandLineRunner的实体类并执行run方法，
-     * 如果需要按照一定的顺序去执行，那么就需要在实体类上使用一个@Order注解（或者实现Order接口）来表明顺序
-     * @param args
-     * @throws Exception
-     */
     @Override
     public void run(String... args) throws Exception {
         ChannelFuture future = this.start();
@@ -66,11 +59,8 @@ public class NettyServer implements CommandLineRunner {
 
     @Value("${netty.server.port}")
     private Integer serverPort;
-    /**
-     * 启动服务
-     * @return
-     * @throws Exception
-     */
+
+
     public ChannelFuture start(){
         ChannelFuture f = null;
         try {
@@ -82,14 +72,11 @@ public class NettyServer implements CommandLineRunner {
                     .childHandler(new ChannelInitializer<SocketChannel>(){
                         @Override
                         protected void initChannel(SocketChannel channel) throws Exception {
-                            //设置特殊分隔符$_
-                            byte[] split = new byte[1];
-                            split[0] = 0x03;
-
-                            ByteBuf buf = Unpooled.copiedBuffer(split);
-                            //ByteBuf buf = Unpooled.copiedBuffer("$_".getBytes());
-                            channel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, buf));
-                            channel.pipeline().addLast(new StringDecoder());
+                            channel.pipeline().addLast(new ServerIdleStateHandler(30*3));  //3次心跳空闲检测
+                            //设置特殊分隔符0x03
+                            ByteBuf[] buf = new ByteBuf[]{Unpooled.wrappedBuffer(new byte[]{3})};
+                            channel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024*6, buf));
+                           // channel.pipeline().addLast(new LsEncoder());
                             channel.pipeline().addLast(nettyServerHandler);
                         }
                     })

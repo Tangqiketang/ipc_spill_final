@@ -1,6 +1,7 @@
 package com.zdhk.ipc.protocal.netty.server;
 
 import com.zdhk.ipc.protocal.netty.cache.NettyContextCache;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
+
 /**
  * 描述:
  * 业务处理类
@@ -79,11 +81,27 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String req = (String)msg;
+        ByteBuf byteBuf = (ByteBuf) msg;
+        byte start = byteBuf.readByte(); //开始标识
+        if(start!=0x02){
+            return;
+        }
 
-        log.info("【{}】" + " :{}",ctx.channel().id(), req);
+        byte[] arr;
+        if(byteBuf.hasArray()){
+            arr = byteBuf.array();//TODO
+        }else{
+            arr = new byte[byteBuf.readableBytes()];
+            byteBuf.getBytes(byteBuf.readerIndex(),arr,0,byteBuf.readableBytes());
+        }
 
-        this.channelWrite(ctx.channel().id(), req);
+
+
+        log.info("【{}】" + " :{}",ctx.channel().id(), new String(arr));
+
+        String result = "收到";
+
+        this.channelWrite(ctx.channel().id(), result);
 
     }
 
@@ -106,9 +124,13 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        String result = msg+"$_";
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeByte(0x02);
+        byteBuf.writeBytes(msg.getBytes());
+        byteBuf.writeByte(0x03);
 
-        ctx.writeAndFlush(Unpooled.copiedBuffer(result.getBytes()));
+        ctx.writeAndFlush(byteBuf);
+        //ctx.writeAndFlush(Unpooled.wrappedBuffer(msg.getBytes()));
     }
 
     @Override
@@ -147,9 +169,20 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
         ctx.close();
         log.info("{} 发生了错误,此连接被关闭" + "此时连通数量: {}",ctx.channel().id(),NettyContextCache.getConnectScoketCount());
-        //cause.printStackTrace();
+    }
+
+
+    public static void main(String[] args) {
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeByte(2);
+        byteBuf.writeBytes(new byte[]{48,48,49});
+        byteBuf.writeByte(3);
+
+        byte[] result = byteBuf.array();
+        for(int i=0;i<byteBuf.readableBytes();i++){
+            System.out.println(result[i]+"ssss");
+        }
     }
 }
