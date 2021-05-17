@@ -2,8 +2,10 @@ package com.zdhk.ipc.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -46,6 +48,12 @@ public class MyDateUtils {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public static String getFormatFromLocalDate(LocalDateTime localDateTime, String format){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        String result = dtf.format(localDateTime);
+        return result;
     }
 
     /**
@@ -171,6 +179,18 @@ public class MyDateUtils {
     public static int getNow(){
         return (int)System.currentTimeMillis()/1000;
     }
+
+
+    /**
+     * 获取明天
+     * @return 20210517
+     */
+    public static String getTomorrow(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return LocalDate.now().plusDays(1).format(dtf);
+    }
+
+
 
     public static void main(String[] args) {
         Date date = new Date();

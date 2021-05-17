@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
-
-import java.net.InetSocketAddress;
 /**
  * 描述:
  * netty服务端 ms
@@ -68,7 +66,7 @@ public class NettyServer implements CommandLineRunner {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .localAddress(new InetSocketAddress(serverIp,serverPort))
+                   // .localAddress(new InetSocketAddress(serverIp,serverPort))
                     .childHandler(new ChannelInitializer<SocketChannel>(){
                         @Override
                         protected void initChannel(SocketChannel channel) throws Exception {
@@ -84,7 +82,7 @@ public class NettyServer implements CommandLineRunner {
                     .option(ChannelOption.SO_SNDBUF, 32*1024)	//发送缓冲大小
                     .option(ChannelOption.SO_RCVBUF, 32*1024)	//接收缓冲大小
                     .childOption(ChannelOption.SO_KEEPALIVE,true);//已加入空闲检测
-            f = bootstrap.bind().sync();
+            f = bootstrap.bind(serverPort).sync();
             channel = f.channel();
             log.info("======EchoServer启动成功!!!=========");
         } catch (Exception e) {

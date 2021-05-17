@@ -55,6 +55,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         } else {
             //保存连接
             NettyContextCache.putChannelIdAndContext(channelId, ctx);
+            log.info("{}连接成功",channelId);
         }
     }
     /**
