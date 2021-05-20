@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <mybatis-plus.version>3.1.1</mybatis-plus.version>
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <guava.version>26.0-jre</guava.version>
         <dozer.version>5.5.1</dozer.version>
         <aliyun-java-sdk-core.version>3.2.3</aliyun-java-sdk-core.version>
@@ -464,6 +464,21 @@
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
             <version>4.0.1</version>
+        </dependency>
+
+
+        <!-- 分布式定时任务锁 -->
+        <!-- https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-spring -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <!-- 使用redis做分布式任务 -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-redis-spring</artifactId>
+            <version>4.2.0</version>
         </dependency>
 
     </dependencies>
