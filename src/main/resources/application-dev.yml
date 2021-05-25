@@ -108,7 +108,7 @@ spring:
 
 
 
-#mybatis plus 设置
+#mybatis plus 设置s
 mybatis-plus:
   mapper-locations: classpath*:com/zdhk/ipc/**/xml/*Mapper.xml
   global-config:
@@ -143,7 +143,7 @@ activeMq:
 
 netty:
   server:
-    ip: 127.0.0.1
+    ip: 10.1.80.183
     port: 8080
   client:
     ip: 127.0.0.1
