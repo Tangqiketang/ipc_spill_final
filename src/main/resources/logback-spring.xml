@@ -47,8 +47,24 @@
         </root>
     </springProfile>
 
+    <!--生产环境:打印控制台和输出到文件-->
+    <springProfile name="homeprod">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="asyncFileAppender"/>
+        </root>
+    </springProfile>
+
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="asyncFileAppender"/>
+        </root>
+    </springProfile>
+
+    <!--开发环境:打印控制台-->
+    <springProfile name="homedev">
         <root level="${LOG_LEVEL}">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="asyncFileAppender"/>

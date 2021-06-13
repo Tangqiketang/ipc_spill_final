@@ -58,7 +58,7 @@ spring:
   #redis 配置
   redis:
     database: 0
-    host: 192.168.41.128
+    host: 192.168.40.131
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制
@@ -77,7 +77,7 @@ spring:
       db0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.0.40.91:3306/test1_sharding?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+        jdbc-url: jdbc:mysql://192.168.40.131:3306/test1_sharding?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: 123456
     sharding:
