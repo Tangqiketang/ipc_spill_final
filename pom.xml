@@ -30,7 +30,8 @@
         <ffmpeg.version>3.4.2-1.4.1</ffmpeg.version>
         <docker.image.prefix>ipc</docker.image.prefix>
         <!-- docker harbor地址 -->
-        <docker.repostory>192.168.41.128:10080</docker.repostory>
+        <docker.repostory>192.168.40.131:10080</docker.repostory>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -506,24 +507,42 @@
                 </configuration>
             </plugin>-->
 
-            <!-- 使用Maven插件直接将应用打包为一个Docker镜像 -->
+            <!-- Docker maven plugin -->
             <plugin>
                 <groupId>com.spotify</groupId>
-                <!-- 这里使用新版dockerfile-maven-plugin插件 -->
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.10</version>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <!-- Dockerfile目录指定 -->
-                    <dockerfile>src/main/resources/Dockerfile</dockerfile>
-                    <repository>${docker.repostory}/${docker.image.prefix}/${project.artifactId}</repository>
-                    <!-- 生成镜像标签 如不指定 默认为latest -->
-                    <tag>${project.version}</tag>
-                    <buildArgs>
-                        <!-- 理论上这里定义的参数可以传递到Dockerfile文件中，目前未实现 -->
-                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-                    </buildArgs>
+                    <!-- 镜像名称-->
+                    <imageName>${project.artifactId}</imageName>
+                    <!-- 镜像标签-->
+                    <imageTags>
+                        <!--可以指定多个标签建议弄成自增序列或者时间戳类型，用于区分版本-->
+                        <imageTag>${maven.build.timestamp}</imageTag>
+                    </imageTags>
+                    <baseImage>java</baseImage>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <!-- dockerfile文件路径-->
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
+            <!-- Docker maven plugin -->
 
         </plugins>
         <resources>

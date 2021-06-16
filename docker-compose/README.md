@@ -4,3 +4,5 @@
 3.在/docker-compose/project/compose目录下运行：
     docker-compose -p ipc_all_final  up -d  
   即可生成对应的服务组
+  
+注意赋予文件 chmod +777  -R fold
