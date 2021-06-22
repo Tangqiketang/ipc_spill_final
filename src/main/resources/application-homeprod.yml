@@ -1,0 +1,166 @@
+server:
+  port: 12222
+  servlet:
+    context-path: /ipc_spill_final
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 500  #最大连接数,也就是并发.超出则部分响应异常。太多则牺牲响应时间
+    min-spare-threads: 25
+    max-threads: 300   #最大线程数.超出则进队列等待. 太多则浪费CPU时间
+    accept-count: 200
+
+swagger:
+  production: false
+  basic:
+    enable: true
+    username: admin
+    password: 123456
+
+logging:
+  path: /opt/upgrade/logs/prod/
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  activemq:
+    user: 330103000000800036
+    password: 123456
+    broker-url: tcp://127.0.0.1:57676
+    # 默认代理URL是否应该在内存中。如果指定了显式代理，则忽略此值。
+    in-memory: true
+    # true表示使用连接池
+    pool:
+      enabled: true
+      # 连接池最大连接数
+      max-connections: 5
+      # mq默认的提供的是queue, 若要topic需要如下配置
+      non-blocking-redelivery: false
+    jms:
+      pub-sub-domain: true
+    #配置freemarker
+    freemarker:
+      # 设置模板后缀名
+      suffix: .ftl
+      # 设置文档类型
+      content-type: text/html
+      # 设置页面编码格式
+      charset: UTF-8
+      # 设置页面缓存
+      cache: false
+      prefer-file-system-access: false
+      # 设置ftl文件路径
+      template-loader-path:
+        - classpath:/templates
+  #redis 配置
+  redis:
+    database: 0
+    host: 192.168.40.131
+    lettuce:
+      pool:
+        max-active: 8   #最大连接数据库连接数,设 0 为没有限制
+        max-idle: 8     #最大等待连接中的数量,设 0 为没有限制
+        max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
+      shutdown-timeout: 100ms
+    password: '123456'
+    port: 6379
+
+
+  #需要预先把表创建好 t_order
+  shardingsphere:
+    datasource:
+      names: db0
+      db0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.40.131:3306/test1_sharding?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: 123456
+    sharding:
+      default-data-source-name: db0
+      tables:
+        t_order:
+          actual-data-nodes: db0.t_order_$->{2020..2021}_$->{(1..12).collect{t ->t.toString().padLeft(2,'0')}}
+          table-strategy:
+            standard:
+              sharding-column: create_time
+              precise-algorithm-class-name: com.zdhk.ipc.sharding.DatePreciseShardingAlgorithm
+              range-algorithm-class-name: com.zdhk.ipc.sharding.DateRangeShardingAlgorithm
+        #关联表,,否则笛卡尔积会有问题
+        t_order_item:
+          actual-data-nodes: db0.t_order_item_$->{2020..2021}_$->{(1..12).collect{t ->t.toString().padLeft(2,'0')}}
+          table-strategy:
+            standard:
+              sharding-column: order_create_time
+              precise-algorithm-class-name: com.zdhk.ipc.sharding.DatePreciseShardingAlgorithm
+              range-algorithm-class-name: com.zdhk.ipc.sharding.DateRangeShardingAlgorithm
+          binding-tables:
+            - t_order,t_order_item
+          defaultDataSourceName: db0
+
+    props:
+      sql:
+        show: true
+
+
+
+#mybatis plus 设置
+mybatis-plus:
+  mapper-locations: classpath*:com/zdhk/ipc/**/xml/*Mapper.xml
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增",1:"该类型为未设置主键类型", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID",5:"字符串全局唯一ID (idWorker 的字符串表示)";
+      id-type: 3
+      # 驼峰下划线转换
+      table-underline: true
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回类型为Map,显示null对应的字段
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+wechat:
+  appID: wx280d450650ea0d8a
+  appsecret: 9c7d8c8235a1fa11424562138d871e53
+  redirect_Uri: http://www.dahuaweb.com/wmwx/test/aems/wxAuth
+  checkToken: xhtest123
+  #小程序
+  mini:
+    appID: wxee0e49f3b8e8136c
+    appsecret: sssssssssssssss
+
+activeMq:
+  manDun:
+    topicName: mandunAccess
+
+netty:
+  server:
+    ip: 127.0.0.1
+    port: 8080
+  client:
+    ip: 127.0.0.1
+    port: 8888
+
+mqtt:
+  url: tcp://127.0.0.1:1883 #推送信息的连接地址，如果有多个，用逗号隔开，如：tcp://127.0.0.1:61613,tcp://192.168.1.61:61613
+  username: admin
+  password: admin
+  consumer:
+    clientId: mqttConsumer
+    defaultTopic: from/device/topic/patrol/#
+  producer:
+    clientId: mqttProducer
+    defaultTopic: send/device/topic/
+  willTopic: send/device/offline
+
+
+
+
