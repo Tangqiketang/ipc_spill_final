@@ -27,7 +27,7 @@ public class WebSocketServer {
     private static int onlineCount = 0; //记录当前连接数
 
     //用于存放每个用户对应的websokcet对象,全局唯一
-    private static ConcurrentHashMap<String,WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String,WebSocketServer> webSocketMap = new ConcurrentHashMap<>(100);
 
     //与每个客户端的连接会话.非静态，每个websocketServer对象中保存一个独立的session
     private Session session;
@@ -142,5 +142,6 @@ public class WebSocketServer {
             }
         }
     }
+
 
 }

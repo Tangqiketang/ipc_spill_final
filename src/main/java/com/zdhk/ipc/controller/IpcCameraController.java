@@ -146,6 +146,20 @@ public class IpcCameraController {
     }
 
 
+    /**
+     * {
+     *     	"cameraName":"aaaaxxxx"
+     * }
+     */
+    @ApiOperation(value = "test2", notes = "相机")
+    @PostMapping("/testyoyo2")
+    @ResponseBody
+    public BaseResp testyoyo2(@RequestBody IpcCamera camera ,@RequestParam String test){
+
+        log.info("xxxxxxxx");
+        return null;
+    }
+
 
 
 

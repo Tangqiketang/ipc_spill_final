@@ -29,7 +29,6 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     public static String HEAD_TOKEN = "token";
 
-
     @Override
     public boolean preHandle(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Object handler) throws IOException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;

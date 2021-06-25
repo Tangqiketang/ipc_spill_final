@@ -5,10 +5,6 @@ import com.zdhk.ipc.entity.IpcEvent;
 import com.zdhk.ipc.mapper.IpcEventMapper;
 import com.zdhk.ipc.utils.MyDateUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -78,7 +74,55 @@ public class TestDVS extends BaseTest{
         return files;
     }
 
-
+//   @Test
+//    public void createAdcode(){
+//        String url = "https://webapi.amap.com/ui/1.1/ui/geo/DistrictExplorer/assets/d_v1/country_tree.json";
+//        String result = restTemplate.getForEntity(url,String.class).getBody();
+//        JSONObject data = JSONObject.parseObject(result);
+//
+//        SysAdcode adcode = new SysAdcode();
+//        adcode.setParent("");
+//        adcode.setAdcode(data.getString("adcode"));
+//        adcode.setLevel(data.getString("level"));
+//        adcode.setName(data.getString("name"));
+//        adcode.insert();
+//
+//        JSONArray proviceArr = data.getJSONArray("children");
+//        for(int i=0;i<proviceArr.size();i++){
+//            JSONObject provice = proviceArr.getJSONObject(i);
+//            SysAdcode adcode1 = new SysAdcode();
+//            adcode1.setParent(adcode.getAdcode());
+//            adcode1.setAdcode(provice.getString("adcode"));
+//            adcode1.setLevel(provice.getString("level"));
+//            adcode1.setName(provice.getString("name"));
+//            adcode1.insert();
+//
+//            if(provice.containsKey("children")){
+//                JSONArray cityArr = provice.getJSONArray("children");
+//                for(int j=0;j<cityArr.size();j++){
+//                    JSONObject city = cityArr.getJSONObject(j);
+//                    SysAdcode adcode2 = new SysAdcode();
+//                    adcode2.setParent(adcode1.getAdcode());
+//                    adcode2.setAdcode(city.getString("adcode"));
+//                    adcode2.setLevel(city.getString("level"));
+//                    adcode2.setName(city.getString("name"));
+//                    adcode2.insert();
+//
+//                    if(city.containsKey("children")){
+//                        JSONArray districtArr = city.getJSONArray("children");
+//                        for(int k=0;k<districtArr.size();k++){
+//                            JSONObject district = districtArr.getJSONObject(k);
+//                            SysAdcode adcode3 = new SysAdcode();
+//                            adcode3.setParent(adcode2.getAdcode());
+//                            adcode3.setAdcode(district.getString("adcode"));
+//                            adcode3.setLevel(district.getString("level"));
+//                            adcode3.setName(district.getString("name"));
+//                            adcode3.insert();
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
 
 }
