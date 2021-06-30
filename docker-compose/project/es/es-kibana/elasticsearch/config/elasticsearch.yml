@@ -1,0 +1,24 @@
+#cluster.name: my-application
+node.name: node-1
+#node.attr.rack: r1
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+#bootstrap.memory_lock: true
+network.host: 0.0.0.0
+http.port: 9200
+#discovery.seed_hosts: ["host1", "host2"]
+cluster.initial_master_nodes: ["node-1"]
+#gateway.recover_after_nodes: 3
+#action.destructive_requires_name: true
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-headers: Authorization
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.audit.enabled: true
+xpack.license.self_generated.type: basic
+xpack.security.transport.ssl.keystore.type: PKCS12
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.type: PKCS12
