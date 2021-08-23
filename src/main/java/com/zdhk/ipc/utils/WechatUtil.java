@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -293,4 +294,12 @@ public class WechatUtil {
         return null;
     }
 
+
+    public static void main(String[] args) {
+        LocalDate date = LocalDate.of(2021,8,16);
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        int dayOfMonth = date.getDayOfMonth();
+        System.out.println(dayOfWeek);
+        System.out.println(dayOfMonth);
+    }
 }

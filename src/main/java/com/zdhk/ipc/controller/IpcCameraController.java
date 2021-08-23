@@ -1,10 +1,12 @@
 package com.zdhk.ipc.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zdhk.ipc.data.rsp.BaseResp;
+import com.zdhk.ipc.dto.IpcCameraVo;
 import com.zdhk.ipc.entity.IpcCamera;
 import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.service.IIpcCameraService;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
+import java.util.Date;
 import java.util.concurrent.Future;
 
 /**
@@ -160,6 +164,24 @@ public class IpcCameraController {
         return null;
     }
 
+
+    public static void main(String[] args) {
+        IpcCamera camera = new IpcCamera();
+        camera.setCreateTime(new Date());
+        camera.setCameraName("camera");
+        camera.setCameraCompany("camera厂家");
+        //camera.setCameraUrl(null);
+
+        IpcCameraVo cameraVo = new IpcCameraVo();
+        cameraVo.setCameraName("cameraVo");
+        cameraVo.setCameraUrl("voURL");
+
+        BeanUtils.copyProperties(camera,cameraVo,"cameraUrl");
+
+        System.out.println(JSON.toJSONString(camera)+"||vo:"+JSON.toJSONString(cameraVo));
+
+
+    }
 
 
 
