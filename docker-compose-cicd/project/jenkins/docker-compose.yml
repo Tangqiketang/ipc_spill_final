@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+# jekins需要jdk和maven,需要修改
+  docker_jenkins:
+    restart: always
+    image: jenkins/jenkins:2.306-centos7-jdk8
+    container_name: docker_jenkins
+    environment:
+      - TZ=Asia/Shanghai
+      - JENKINS_ADMIN_ID=admin
+      - JENKINS_ADMIN_PW=123456
+      - JENKINS_MODE=master
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    ports:
+      - '18080:8080'
+      - '28080:50000'
+    volumes:
+      - ./data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
+      - /usr/java/jdk1.8:/usr/java/jdk1.8
+      - /home/maven:/home/maven
+
+
