@@ -1,3 +1,4 @@
+#cicd 插件指定的docker目录
 FROM openjdk:8-jdk-alpine
 MAINTAINER wangmin <641718840@qq.com>
 RUN mkdir -p /opt/upgrade/

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <localRepository>/docker/docker-compose/project/.m2</localRepository>
+    <pluginGroups>
+         <!--  <pluginGroup>org.apache.tomcat.maven</pluginGroup>-->
+    </pluginGroups>
+    <mirrors>
+ <!--       <mirror>
+            <id>mirror</id>
+            <mirrorOf>!rdc-releases,!rdc-snapshots</mirrorOf>
+            <name>mirror</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </mirror> -->
+ <!--		<mirror>
+			<id>alimaven</id>
+			<mirrorOf>*,!jitpack.io</mirrorOf>
+			<name>aliyun maven</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</mirror> -->
+  <!--		<mirror>
+            <id>nexus-aliyun</id>
+            <mirrorOf>*,!jeecg,!jeecg-snapshots</mirrorOf>
+            <name>Nexus aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </mirror> -->
+    </mirrors>
+    <servers>
+  <!--       <server>
+            <id>rdc-releases</id>
+            <username>VSdb6G</username>
+            <password>Qv2lVlyRe3</password>
+        </server>
+        <server>
+            <id>rdc-snapshots</id>
+            <username>VSdb6G</username>
+            <password>Qv2lVlyRe3</password>
+        </server>-->
+		<server>
+			<id>cetiti_admin_nexus</id>
+			<username>admin</username>
+			<password>admin@123</password>
+		</server>
+		<server>
+			<id>cetiti_deploy_nexus</id>
+			<username>deployment</username>
+			<password>cetiti.com</password>
+		</server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>nexus</id>
+            <repositories>
+				<repository>
+				    <id>cetiti-snapshot</id>
+					<name>cetiti-snapshot</name>
+					<url>http://10.0.40.66:8931/repository/maven-public/</url>
+				</repository>
+  <!--                  <repository>
+                    <id>central</id>
+                    <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>snapshots</id>
+                    <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>rdc-releases</id>
+                    <url>https://repo.rdc.aliyun.com/repository/80382-release-TKXYeB/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>rdc-snapshots</id>
+                    <url>https://repo.rdc.aliyun.com/repository/80382-snapshot-uKe1bi/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository> -->
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>nexus</activeProfile>
+
+    </activeProfiles>
+
+
+</settings>

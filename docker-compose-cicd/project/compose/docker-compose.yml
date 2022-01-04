@@ -2,46 +2,6 @@ version: "3"
 
 services:
 
-  nginx:
-    container_name: app_nginx
-    build: ../nginx
-    ports:
-      - 12333:12333
-    volumes:
-      - ../nginx/default.conf:/etc/nginx/conf.d/default.conf
-    restart: always
-
-  redis:
-    image: redis:4.0.14
-    container_name: app_redis
-    environment:
-      - TZ=Asia/Shanghai
-    volumes:
-      - ../redis/redis.conf:/etc/redis/redis.conf:ro
-      - ../redis/data:/data
-    command:
-      - redis-server
-      - /etc/redis/redis.conf
-    ports:
-      - 6379:6379
-    restart: always
-
-  webapp:
-    build: ../app
-    container_name: app_spill_final
-    depends_on:
-      - mysql
-      - redis
-      - nginx
-    environment:
-      - TZ=Asia/Shanghai
-    volumes:
-      - /opt/upgrade:/opt/upgrade
-    ports:
-      - "12222:12222"
-      - "5650:5650"
-    restart: always
-
 # jekins需要jdk和maven,需要修改
   docker_jenkins:
     restart: always
@@ -75,13 +35,6 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://192.168.40.131:9080'
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
-        gitlab_rails['gitlab_ssh_host'] = '192.168.40.131'
-        gitlab_rails['lfs_enabled'] = true
-        gitlab_rails['lfs_storage_path'] = "/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
-        nginx['enable'] = true
-        nginx['client_max_body_size'] = '250m'
-        nginx['listen_addresses'] = ["0.0.0.0"]
-        nginx['http2_enabled'] = true
     ports:
       - '9080:9080'
       - '8443:443'

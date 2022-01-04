@@ -1,0 +1,22 @@
+version: '3'
+services:
+  supernanny:
+    image: 192.168.40.131:8090/${PROJECT}/${SERVICE}:${VER}
+    volumes:
+      - /opt/upgrade/ipc_spill_final:/opt/upgrade
+    environment:
+      TZ: Asia/Shanghai
+      MYSQLIP: 192.168.40.131
+      MYSQLPORT: 3306
+      MYSQL_USERNAME: "root"
+      MYSQL_PASSWORD: "123456"
+      REDISIP: 192.168.40.131
+      REDISPORT: 6379
+      REDISPASSWORD: 123456
+      ESIP: 192.168.40.131
+      ESPRORT: 9200
+      ESPPASSWORD: hikhome@123
+    command: java -jar /opt/jre/ipc_spill_final.jar --spring.profiles.active=homedev
+    ports:
+      - "12222:12222"
+    restart: always

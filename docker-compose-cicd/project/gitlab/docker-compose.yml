@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  gitlab-cicd:
+    image: 'twang2218/gitlab-ce-zh'
+    restart: always
+    container_name: gitlab
+    hostname: '192.168.41.128'
+    privileged: true
+    environment:
+      TZ: 'Asia/Shanghai'
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://192.168.41.128:9080'
+        gitlab_rails['time_zone'] = 'Asia/Shanghai'
+        gitlab_rails['gitlab_ssh_host'] = '192.168.41.128'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        gitlab_rails['lfs_enabled'] = true
+        gitlab_rails['lfs_storage_path'] = "/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
+        nginx['enable'] = true
+        nginx['client_max_body_size'] = '250m'
+        nginx['listen_addresses'] = ["0.0.0.0"]
+        nginx['http2_enabled'] = true
+
+    ports:
+      - '9080:9080'
+      - '8443:443'
+      - '2222:22'
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+      - ./gitlab/logs:/var/log/gitlab
