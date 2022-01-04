@@ -496,6 +496,7 @@
                 </configuration>
             </plugin>
 
+            <!--Lifecycle-install || 跳过test ||可能需要关闭netty -->
             <plugin>
                 <groupId>com.github.lazyBoyl</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
