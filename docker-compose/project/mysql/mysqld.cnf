@@ -6,8 +6,14 @@ no-auto-rehash
 auto-rehash
 default-character-set=utf8mb4
 [mysqld]
-###basic settings
-server-id = 2
+###开启日志binlog
+#binlog-ignore-db = mysql,information_schema       #忽略写入binlog日志的库
+#log-bin=mysql-bin
+#auto_increment_increment=2
+#auto_increment_offset=1
+#slave-skip-errors = all
+
+server-id = 1
 pid-file    = /var/run/mysqld/mysqld.pid
 socket        = /var/run/mysqld/mysqld.sock
 datadir        = /var/lib/mysql
@@ -64,7 +70,7 @@ innodb_buffer_pool_instances = 20
 innodb_buffer_pool_load_at_startup = 1
 innodb_buffer_pool_dump_at_shutdown = 1
 innodb_log_file_size = 300M
-innodb_log_files_in_group = 2 
+innodb_log_files_in_group = 2
 innodb_log_buffer_size = 16M
 innodb_undo_logs = 128
 #innodb_undo_tablespaces = 3

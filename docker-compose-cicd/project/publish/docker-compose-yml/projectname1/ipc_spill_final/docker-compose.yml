@@ -16,7 +16,8 @@ services:
       ESIP: 192.168.40.131
       ESPRORT: 9200
       ESPPASSWORD: hikhome@123
-    command: java -jar /opt/jre/ipc_spill_final.jar --spring.profiles.active=homedev
+    command: java -jar /opt/jre/ipc_spill_final.jar --spring.profiles.active=homeprod
     ports:
       - "12222:12222"
+      - "8080:8080"
     restart: always
