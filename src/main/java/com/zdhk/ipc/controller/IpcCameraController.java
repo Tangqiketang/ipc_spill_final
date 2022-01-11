@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.concurrent.Future;
 
@@ -44,6 +46,17 @@ public class IpcCameraController {
 
     @Autowired
     private IIpcCameraService ipcCameraService;
+
+    @ApiOperation(value = "测试负载均衡", notes = "测试负载均衡")
+    @PostMapping("/blanceReturnIp")
+    @ResponseBody
+    public BaseResp blanceReturnIp() throws UnknownHostException {
+        BaseResp rsp = new BaseResp();
+        String hostAddress= InetAddress.getLocalHost().getHostAddress();
+        rsp.setCode(0);
+        rsp.setResult(hostAddress);
+        return rsp;
+    }
 
     @ApiOperation(value = "新增相机", notes = "相机")
     @PostMapping("/insertCamera")

@@ -18,11 +18,10 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.time.Duration;
 
 import static java.util.Collections.singletonMap;
@@ -123,4 +122,11 @@ public class RedisConfig extends CachingConfigurerSupport {
 		return cacheManager;
 	}
 
+	/**
+	 * description 配置事务管理器
+	 **/
+	@Bean
+	public PlatformTransactionManager transactionManager(DataSource dataSource){
+		return new DataSourceTransactionManager(dataSource);
+	}
 }
