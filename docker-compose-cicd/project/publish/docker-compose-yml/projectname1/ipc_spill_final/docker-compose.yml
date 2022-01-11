@@ -3,7 +3,7 @@ services:
   supernanny:
     image: 192.168.40.131:8090/${PROJECT}/${SERVICE}:${VER}
     volumes:
-      - /opt/upgrade/ipc_spill_final:/opt/upgrade
+      - /usr/java/ipc_spill_final:/opt/upgrade
     environment:
       TZ: Asia/Shanghai
       MYSQLIP: 192.168.40.131

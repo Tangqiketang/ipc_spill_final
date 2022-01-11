@@ -547,7 +547,7 @@
     </dependencies>
 
     <build>
-        <finalName>ipc_spill_final</finalName>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -567,13 +567,13 @@
                     <imagesHeadName>${project.name}:${version}</imagesHeadName>
                     <containerRunName>${project.name}</containerRunName>
                     <dockerServerLocation>${docker.server.location}</dockerServerLocation>
-                    <pushImageToDockerHub>true</pushImageToDockerHub>
+                    <pushImageToDockerHub>false</pushImageToDockerHub>
                     <!-- 本地package以后生成的jar包的完整路径 -->
                     <jarTargetPath>${basedir}/target/${project.name}.jar</jarTargetPath>
                     <!-- centos服务器存放我们的dockerFile文件和相应的jar包的文件夹的路径 -->
                     <dockerImagesPath>/usr/java/${project.name}/</dockerImagesPath>
                     <!-- 创建镜像的dockerFile的文件的路径 -->
-                    <dockerFilePath>${basedir}/dockerFile/Dockerfile</dockerFilePath>
+                    <dockerFilePath>${basedir}/src/main/resources/Dockerfile</dockerFilePath>
                     <!-- 该工程启动的时候的文件挂载 -->
                     <containerRunShare>/usr/java/${project.name}/:/opt/upgrade/</containerRunShare>
                     <!-- 该工程启动的时候的端口映射,多个端口那就对应着启动多少个容器 -->
@@ -583,7 +583,7 @@
                     <options>
                         <!-- 服务器的ip,账号,密码 。可以实现多服务部署-->
                         <option>
-                            192.168.40.131,root,root!Q2w
+                            192.168.40.132,root,root!Q2w
                         </option>
                     </options>
                 </configuration>
