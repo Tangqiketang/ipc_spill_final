@@ -567,7 +567,7 @@
                     <imagesHeadName>${project.name}:${version}</imagesHeadName>
                     <containerRunName>${project.name}</containerRunName>
                     <dockerServerLocation>${docker.server.location}</dockerServerLocation>
-                    <pushImageToDockerHub>false</pushImageToDockerHub>
+                    <pushImageToDockerHub>true</pushImageToDockerHub>
                     <!-- 本地package以后生成的jar包的完整路径 -->
                     <jarTargetPath>${basedir}/target/${project.name}.jar</jarTargetPath>
                     <!-- centos服务器存放我们的dockerFile文件和相应的jar包的文件夹的路径 -->

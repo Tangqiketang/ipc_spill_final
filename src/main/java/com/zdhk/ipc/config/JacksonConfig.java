@@ -34,6 +34,7 @@ public class JacksonConfig {
         javaTimeModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern(TimeConst.DEFAULT_DATE_FORMAT)));
         javaTimeModule.addDeserializer(LocalTime.class,new LocalTimeDeserializer(DateTimeFormatter.ofPattern(TimeConst.DEFAULT_TIME_FORMAT)));
         objectMapper.registerModule(javaTimeModule).registerModule(new ParameterNamesModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
         return objectMapper;
     }
 }

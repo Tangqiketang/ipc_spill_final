@@ -1,0 +1,8 @@
+kubectl replace --force -f  ipc.yaml
+
+
+==================================
+kubectl get pods
+kubectl get pods -n homedev 查看命名空间里面
+kubectl get pod,svc -o wide
+
