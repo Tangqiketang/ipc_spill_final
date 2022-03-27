@@ -4,10 +4,11 @@ server:
     context-path: /ipc_spill_final
   tomcat:
     uri-encoding: UTF-8
-    max-connections: 500  #最大连接数,也就是并发.超出则部分响应异常。太多则牺牲响应时间
-    min-spare-threads: 25
-    max-threads: 300   #最大线程数.超出则进队列等待. 太多则浪费CPU时间
-    accept-count: 200
+    max-connections: 6500  #最大连接数,也就是并发.超出则部分响应异常。大于max-threads+accpet-count
+    min-spare-threads: 500  #初始化最大线程数
+    max-threads: 2500   #12核心24G配置12*200.最大线程数.超出则进队列等待.
+    accept-count: 1000  #最大等待队列
+  connection-timeout: 12000
 
 swagger:
   production: true

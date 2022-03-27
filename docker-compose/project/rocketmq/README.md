@@ -1,0 +1,1 @@
+注意权限 chmod +777 -R rocketmq

@@ -9,6 +9,7 @@ import com.zdhk.ipc.dto.newOrder.StandOrderParam;
 import com.zdhk.ipc.entity.IpcCamera;
 import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.service.IIpcCameraService;
+import com.zdhk.ipc.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import java.net.InetAddress;
@@ -181,6 +183,20 @@ public class IpcCameraController {
     public BaseResp addTest(@ApiParam(value = "查询哪个月 2021-08-20")@DateTimeFormat(pattern = "yyyy-MM-dd")
                             @RequestParam(required = false) LocalDate queryDate){
         return null;
+    }
+
+    @Resource
+    private UserService userService;
+
+    @GetMapping("/yy")
+    @ResponseBody
+    public BaseResp yyyyyyy(){
+        BaseResp rsp= new BaseResp<>();
+
+        rsp.setResult(ipcCameraService.getById(2));
+
+
+        return rsp;
     }
 
 
