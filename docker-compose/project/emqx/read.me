@@ -1,0 +1,5 @@
+先运行一个不需要文件映射的容器，把数据和配置复制到宿主机
+docker cp emqx_emqx_1:/opt/emqx/etc/.   /home/docker-compose/project/emqx/etc
+docker cp emqx_emqx_1:/opt/emqx/data/.   /home/docker-compose/project/emqx/data
+
+同时给权限chmod -R +777 /home/docker-compose/project/emqx

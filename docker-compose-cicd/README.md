@@ -28,3 +28,5 @@ maven:
     export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
     
     2.setting
+ansible:
+    查看变量：vim /etc/ansible/hosts

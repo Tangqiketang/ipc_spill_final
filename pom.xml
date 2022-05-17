@@ -583,7 +583,7 @@
                     <options>
                         <!-- 服务器的ip,账号,密码 。可以实现多服务部署-->
                         <option>
-                            192.168.40.132,root,root!Q2w
+                            192.168.40.131,root,root!Q2w
                         </option>
                     </options>
                 </configuration>
