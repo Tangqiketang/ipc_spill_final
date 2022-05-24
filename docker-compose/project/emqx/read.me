@@ -3,3 +3,12 @@ docker cp emqx_emqx_1:/opt/emqx/etc/.   /home/docker-compose/project/emqx/etc
 docker cp emqx_emqx_1:/opt/emqx/data/.   /home/docker-compose/project/emqx/data
 
 同时给权限chmod -R +777 /home/docker-compose/project/emqx
+
+
+=========================
+tls-->auth-->acl
+ssl证书：
+vim emqx.conf,修改2个证书路径。server.key server.pem
+================================
+etc/plugins/emqx_auth_http.conf
+

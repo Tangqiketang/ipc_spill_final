@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#./start.sh start
-
 usage() {
     echo "Usage: sh 执行脚本.sh [start|stop|restart|status]"
     exit 1
@@ -32,10 +30,18 @@ is_exist
 if [ $? -eq "0" ]; then
 echo ">>>  ipc_spill_final  is already running PID=${pid} <<<"
 else
-nohup java -Xms512m -Xmx2048m  -jar ipc_spill_final.jar --spring.cloud.nacos.discovery.ip=101.132.120.85 --spring.cloud.nacos.config.server-addr=101.132.120.85:8848 --spring.cloud.nacos.config.namespace=9f45302a-e710-48cd-bee6-8b8e69188244 &
+nohup java -Xms512m -Xmx2048m  -jar ipc_spill_final.jar --spring.cloud.nacos.discovery.ip=10.0.30.153 --spring.cloud.nacos.config.server-addr=10.0.30.153:8848 --spring.cloud.nacos.config.namespace=203ec45d-5654-4974-9609-7be239e6816e &
 echo ">>> start  ipc_spill_final successed PID=$! <<<"
 fi
 }
+
+
+restart(){
+	stop
+	start
+	echo ">>>  restart success <<<"
+}
+
 
 case "$1" in
   "start")
