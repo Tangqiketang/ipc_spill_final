@@ -3,14 +3,12 @@ package com.zdhk.ipc.protocal.netty.server;
 import com.zdhk.ipc.protocal.netty.cache.NettyContextCache;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 
@@ -22,8 +20,8 @@ import java.net.InetSocketAddress;
  * @create 2020-07-21 8:45
  */
 @Slf4j
-@Component
-@ChannelHandler.Sharable
+//@Component
+//@ChannelHandler.Sharable
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override

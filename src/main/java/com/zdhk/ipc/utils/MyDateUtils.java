@@ -193,8 +193,12 @@ public class MyDateUtils {
 
 
     public static void main(String[] args) {
-        Date date = new Date();
+        LocalDate menuDate = LocalDate.now().plusDays(0); //每个当天
+        System.out.println(menuDate);
 
-        System.out.println(getNow());
+        int dayOfWeek = (int) (menuDate.toEpochDay() + 3) % 7;
+        System.out.println(dayOfWeek);
+        int dayOfMonth = menuDate.getDayOfMonth() - 1;
+        System.out.println(dayOfMonth);
     }
 }

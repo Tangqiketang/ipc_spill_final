@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: homeprod
+    active: homedev
 
 token:
   expireTime: 86400000 #毫秒1天

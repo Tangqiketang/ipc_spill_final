@@ -1,0 +1,4 @@
+1.chmod -R +777 es  运行之后还要执行一遍！！！！
+2.vim /etc/sysctl.conf
+最后添加vm.max_map_count=262144
+3./sbin/sysctl -p

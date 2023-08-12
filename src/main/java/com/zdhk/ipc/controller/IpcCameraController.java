@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zdhk.ipc.data.rsp.BaseResp;
+import com.zdhk.ipc.dto.newOrder.StandOrderParam;
 import com.zdhk.ipc.entity.IpcCamera;
 import com.zdhk.ipc.entity.TOrder;
 import com.zdhk.ipc.service.IIpcCameraService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
+import java.time.LocalDate;
 import java.util.concurrent.Future;
 
 /**
@@ -101,7 +105,12 @@ public class IpcCameraController {
             @RequestParam(name="id",required = true)Integer id
     ){
         BaseResp rsp = new BaseResp();
-        ipcCameraService.removeById(id);
+        //ipcCameraService.removeById(id);
+
+        LambdaQueryWrapper<IpcCamera> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(IpcCamera::getId,id);
+        ipcCameraService.remove(wrapper);
+
         rsp.setCode(0);
         return rsp;
     }
@@ -146,7 +155,20 @@ public class IpcCameraController {
     }
 
 
+    @ApiOperation("新增订单(标准),返回预支付交易信息")
+    @ResponseBody
+    @PostMapping("/addStandOrder")
+    public BaseResp addStandOrder(@RequestBody StandOrderParam standOrderParam) {
+        return null;
+    }
 
+    @ApiOperation("表单传日期")
+    @ResponseBody
+    @PostMapping("/addDateString")
+    public BaseResp addTest(@ApiParam(value = "查询哪个月 2021-08-20")@DateTimeFormat(pattern = "yyyy-MM-dd")
+                            @RequestParam(required = false) LocalDate queryDate){
+        return null;
+    }
 
 
 
